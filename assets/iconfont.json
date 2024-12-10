@@ -1,0 +1,65 @@
+{
+  "id": "4775022",
+  "name": "esp32s3_project",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "401246",
+      "name": "weather",
+      "font_class": "weather",
+      "unicode": "e8c8",
+      "unicode_decimal": 59592
+    },
+    {
+      "icon_id": "510944",
+      "name": "music_fill",
+      "font_class": "musicfill",
+      "unicode": "e795",
+      "unicode_decimal": 59285
+    },
+    {
+      "icon_id": "5924815",
+      "name": "games-2",
+      "font_class": "games-",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    },
+    {
+      "icon_id": "7573264",
+      "name": "movie",
+      "font_class": "movie",
+      "unicode": "e6f8",
+      "unicode_decimal": 59128
+    },
+    {
+      "icon_id": "21730823",
+      "name": "record",
+      "font_class": "record",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "21937762",
+      "name": "ic_record_on",
+      "font_class": "ic_record_on",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
+    },
+    {
+      "icon_id": "42084062",
+      "name": "setting",
+      "font_class": "setting",
+      "unicode": "e966",
+      "unicode_decimal": 59750
+    },
+    {
+      "icon_id": "5838464",
+      "name": "计算",
+      "font_class": "jisuan",
+      "unicode": "e852",
+      "unicode_decimal": 59474
+    }
+  ]
+}
