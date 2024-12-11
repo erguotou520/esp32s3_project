@@ -17,8 +17,7 @@
 static const char *TAG = "app_ui";
 
 LV_FONT_DECLARE(font_alipuhui20);
-LV_FONT_DECLARE(font_icon);
-// LV_FONT_DECLARE(font_awesome);
+LV_FONT_DECLARE(font_icon44);
 
 lv_obj_t * main_obj; // 主界面
 lv_obj_t * main_text_label; // 主界面 欢迎语
@@ -1776,6 +1775,28 @@ static void btset_event_handler(lv_event_t * e)
     icon_flag = 6; // 标记已经进入第6个应用
 }
 
+// 创建应用图标函数
+static lv_obj_t* create_app_icon(lv_obj_t *parent, lv_style_t *style,
+                                int x, int y,
+                                lv_color_t color, 
+                                lv_event_cb_t event_cb,
+                                const char *icon_text) {
+    // 创建图标按钮
+    lv_obj_t *icon = lv_btn_create(parent);
+    lv_obj_add_style(icon, style, 0);
+    lv_obj_set_style_bg_color(icon, color, 0);
+    lv_obj_set_pos(icon, x, y);
+    lv_obj_add_event_cb(icon, event_cb, LV_EVENT_CLICKED, NULL);
+
+    // 使用文字
+    lv_obj_t *lbl = lv_label_create(icon);
+    lv_obj_set_style_text_font(lbl, &font_icon44, 0);
+    lv_label_set_text(lbl, icon_text);
+    lv_obj_align(lbl, LV_ALIGN_CENTER, 0, 0);
+
+    return icon;
+}
+
 
 /******************************** 主界面  ******************************/
 
@@ -1787,119 +1808,75 @@ void lv_main_page(void)
     // 创建主界面基本对象
     lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x000000), 0); // 修改背景为黑色
 
-    static lv_style_t style;
-    lv_style_init(&style);
-    lv_style_set_radius(&style, 10);  
-    lv_style_set_bg_opa( &style, LV_OPA_COVER );
-    lv_style_set_bg_color(&style, lv_color_hex(0x00BFFF));
-    lv_style_set_bg_grad_color( &style, lv_color_hex( 0x00BF00 ) );
-    lv_style_set_bg_grad_dir( &style, LV_GRAD_DIR_VER );
-    lv_style_set_border_width(&style, 0);
-    lv_style_set_pad_all(&style, 0);
-    lv_style_set_width(&style, 320);  
-    lv_style_set_height(&style, 240); 
+    static lv_style_t bg_style;
+    lv_style_init(&bg_style);
+    lv_style_set_radius(&bg_style, 10);  
+    lv_style_set_bg_opa(&bg_style, LV_OPA_COVER);
+    lv_style_set_bg_color(&bg_style, lv_color_hex(0x00BFFF));
+    lv_style_set_bg_grad_color(&bg_style, lv_color_hex(0x00BF00));
+    lv_style_set_bg_grad_dir(&bg_style, LV_GRAD_DIR_VER);
+    lv_style_set_border_width(&bg_style, 0);
+    lv_style_set_pad_all(&bg_style, 0);
+    lv_style_set_width(&bg_style, 320);  
+    lv_style_set_height(&bg_style, 240); 
 
     main_obj = lv_obj_create(lv_scr_act());
-    lv_obj_add_style(main_obj, &style, 0);
+    lv_obj_add_style(main_obj, &bg_style, 0);
+
+    // 显示左上角欢迎语
+    main_text_label = lv_label_create(main_obj);
+    lv_obj_set_style_text_font(main_text_label, &font_alipuhui20, 0);
+    lv_label_set_long_mode(main_text_label, LV_LABEL_LONG_SCROLL_CIRCULAR);     /*Circular scroll*/
+    lv_obj_set_width(main_text_label, 280);
+    lv_label_set_text(main_text_label, "和沐学习娱乐机");
+    lv_obj_align_to(main_text_label, main_obj, LV_ALIGN_TOP_LEFT, 8, 5);
 
     // 显示右上角符号
-    lv_obj_t * sylbom_label = lv_label_create(main_obj);
+    lv_obj_t *sylbom_label = lv_label_create(main_obj);
     lv_obj_set_style_text_font(sylbom_label, &lv_font_montserrat_20, 0);
     lv_obj_set_style_text_color(sylbom_label, lv_color_hex(0xffffff), 0);
     lv_label_set_text(sylbom_label, LV_SYMBOL_BLUETOOTH" "LV_SYMBOL_WIFI);  // 显示蓝牙和wifi图标
     lv_obj_align_to(sylbom_label, main_obj, LV_ALIGN_TOP_RIGHT, -10, 10);
 
-    // 显示左上角欢迎语
-    main_text_label = lv_label_create(main_obj);
-    lv_obj_set_style_text_font(main_text_label, &font_icon, 0);
-    lv_label_set_long_mode(main_text_label, LV_LABEL_LONG_SCROLL_CIRCULAR);     /*Circular scroll*/
-    lv_obj_set_width(main_text_label, 280);
-    lv_label_set_text(main_text_label, "\xEE\xA3\x88");
-    lv_obj_align_to(main_text_label, main_obj, LV_ALIGN_TOP_LEFT, 8, 5);
+    // 创建一个滚动视图来容纳应用图标
+    lv_obj_t *scroll_view = lv_obj_create(main_obj);
+    lv_obj_set_style_bg_opa(scroll_view, LV_OPA_TRANSP, 0); // 设置背景色为透明
+    lv_obj_set_size(scroll_view, 320, 200); // 调整高度以剪掉上面部分的高度
+    lv_obj_set_style_pad_hor(scroll_view, 15, 0);  // 设置左右padding
+    lv_obj_set_style_pad_ver(scroll_view, 10, 0);  // 设置上下padding
+    lv_obj_set_style_border_width(scroll_view, 0, 0);
+    lv_obj_set_scrollbar_mode(scroll_view, LV_SCROLLBAR_MODE_OFF); // 不显示滚动条
+    lv_obj_set_scroll_dir(scroll_view, LV_DIR_VER); // 仅垂直滚动
+    lv_obj_align(scroll_view, LV_ALIGN_TOP_MID, 0, 40); // 将滚动视图放置在下方
 
     // 设置应用图标style
     static lv_style_t btn_style;
     lv_style_init(&btn_style);
     lv_style_set_radius(&btn_style, 16);  
-    lv_style_set_bg_opa( &btn_style, LV_OPA_COVER );
+    lv_style_set_bg_opa(&btn_style, LV_OPA_COVER);
     lv_style_set_text_color(&btn_style, lv_color_hex(0xffffff)); 
     lv_style_set_border_width(&btn_style, 0);
     lv_style_set_pad_all(&btn_style, 5);
     lv_style_set_width(&btn_style, 80);  
     lv_style_set_height(&btn_style, 80); 
 
-    // 创建第1个应用图标
-    lv_obj_t *icon1 = lv_btn_create(main_obj);
-    lv_obj_add_style(icon1, &btn_style, 0);
-    lv_obj_set_style_bg_color(icon1, lv_color_hex(0x30a830), 0);
-    lv_obj_set_pos(icon1, 15, 50);
-    lv_obj_add_event_cb(icon1, att_event_handler, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t * img1 = lv_img_create(icon1);
-    LV_IMG_DECLARE(img_att_icon);
-    lv_img_set_src(img1, &img_att_icon);
-    lv_obj_align(img1, LV_ALIGN_CENTER, 0, 0);
-
-    // 创建第2个应用图标
-    lv_obj_t *icon2 = lv_btn_create(main_obj);
-    lv_obj_add_style(icon2, &btn_style, 0);
-    lv_obj_set_style_bg_color(icon2, lv_color_hex(0xf87c30), 0);
-    lv_obj_set_pos(icon2, 120, 50);
-    lv_obj_add_event_cb(icon2, music_event_handler, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t * img2 = lv_img_create(icon2);
-    LV_IMG_DECLARE(img_music_icon);
-    lv_img_set_src(img2, &img_music_icon);
-    lv_obj_align(img2, LV_ALIGN_CENTER, 0, 0);
-
-    // 创建第3个应用图标
-    lv_obj_t *icon3 = lv_btn_create(main_obj);
-    lv_obj_add_style(icon3, &btn_style, 0);
-    lv_obj_set_style_bg_color(icon3, lv_color_hex(0x008b8b), 0);
-    lv_obj_set_pos(icon3, 225, 50);
-    lv_obj_add_event_cb(icon3, sdcard_event_handler, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t * img3 = lv_img_create(icon3);
-    LV_IMG_DECLARE(img_sd_icon);
-    lv_img_set_src(img3, &img_sd_icon);
-    lv_obj_align(img3, LV_ALIGN_CENTER, 0, 0);
-
-    // 创建第4个应用图标
-    lv_obj_t *icon4 = lv_btn_create(main_obj);
-    lv_obj_add_style(icon4, &btn_style, 0);
-    lv_obj_set_style_bg_color(icon4, lv_color_hex(0xd8b010), 0);
-    lv_obj_set_pos(icon4, 15, 147);
-    lv_obj_add_event_cb(icon4, camera_event_handler, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t * img4 = lv_img_create(icon4);
-    LV_IMG_DECLARE(img_camera_icon);
-    lv_img_set_src(img4, &img_camera_icon);
-    lv_obj_align(img4, LV_ALIGN_CENTER, 0, 0);
-
-    // 创建第5个应用图标
-    lv_obj_t *icon5 = lv_btn_create(main_obj);
-    lv_obj_add_style(icon5, &btn_style, 0);
-    lv_obj_set_style_bg_color(icon5, lv_color_hex(0xcd5c5c), 0);
-    lv_obj_set_pos(icon5, 120, 147);
-    lv_obj_add_event_cb(icon5, wifiset_event_handler, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t * img5 = lv_img_create(icon5);
-    LV_IMG_DECLARE(img_wifiset_icon);
-    lv_img_set_src(img5, &img_wifiset_icon);
-    lv_obj_align(img5, LV_ALIGN_CENTER, 0, 0);
-
-    // 创建第6个应用图标
-    lv_obj_t *icon6 = lv_btn_create(main_obj);
-    lv_obj_add_style(icon6, &btn_style, 0);
-    lv_obj_set_style_bg_color(icon6, lv_color_hex(0xb87fa8), 0);
-    lv_obj_set_pos(icon6, 225, 147);
-    lv_obj_add_event_cb(icon6, btset_event_handler, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t * img6 = lv_img_create(icon6);
-    LV_IMG_DECLARE(img_btset_icon);
-    lv_img_set_src(img6, &img_btset_icon);
-    lv_obj_align(img6, LV_ALIGN_CENTER, 0, 0);
-
+    // 学习
+    create_app_icon(scroll_view, &btn_style, 0, 0, lv_color_hex(0x30a830), att_event_handler, "\xee\xa1\x92");
+    // 娱乐
+    create_app_icon(scroll_view, &btn_style, 105, 0, lv_color_hex(0xf87c30), btset_event_handler, "\xee\x99\x80");
+    // 天气
+    create_app_icon(scroll_view, &btn_style, 210, 0, lv_color_hex(0x008b8b), wifiset_event_handler, "\xee\xa3\x88");
+    // 拍照
+    create_app_icon(scroll_view, &btn_style, 0, 97, lv_color_hex(0xd8b010), camera_event_handler, "\xee\x99\xad");
+    // 相册
+    create_app_icon(scroll_view, &btn_style, 105, 97, lv_color_hex(0xcd5c5c), sdcard_event_handler, "\xee\x9b\xb8");
+    // 录音
+    create_app_icon(scroll_view, &btn_style, 210, 97, lv_color_hex(0xb87fa8), music_event_handler, "\xee\x9b\x83");
+    // 音乐
+    create_app_icon(scroll_view, &btn_style, 0, 192, lv_color_hex(0xEB8258), music_event_handler, "\xee\x9e\x95");
+    // 设置
+    create_app_icon(scroll_view, &btn_style, 105, 192, lv_color_hex(0x81BFDA), music_event_handler, "\xee\xa5\xa6");
+    
     lvgl_port_unlock();
 }
 

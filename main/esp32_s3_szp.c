@@ -896,8 +896,6 @@ esp_err_t bsp_get_feed_data(bool is_get_raw_channel, int16_t *buffer, int buffer
     return ret;
 }
 
-// 开机音乐 任务函数
-extern EventGroupHandle_t my_event_group;
 
 extern const uint8_t music_pcm_start[] asm("_binary_sword_pcm_start");
 extern const uint8_t music_pcm_end[]   asm("_binary_sword_pcm_end");
@@ -939,7 +937,6 @@ void power_music_task(void *pvParameters)
     }
 
     pa_en(0);  // 关闭音频输出
-    xEventGroupSetBits(my_event_group, START_MUSIC_COMPLETED);
 
     vTaskDelete(NULL);
 }
