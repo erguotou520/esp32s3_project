@@ -1,5 +1,5 @@
 # 收集 ui/src 目录下所有 .c 文件
-file(GLOB UI_SRC_SOURCES "ui/*.c")
+file(GLOB UI_SRC_SOURCES "ui/*/src/*.c")
 
 idf_component_register(SRCS "esp32_s3_szp.c" "main.c"
                        SRCS "assets/image_lckfb_logo.c"
@@ -16,7 +16,17 @@ idf_component_register(SRCS "esp32_s3_szp.c" "main.c"
                        EMBED_FILES "sword.pcm"
                        INCLUDE_DIRS "."
                        INCLUDE_DIRS "bt"
-                       INCLUDE_DIRS "ui")
+                       INCLUDE_DIRS "ui/album/include"
+                       INCLUDE_DIRS "ui/camera/include"
+                       INCLUDE_DIRS "ui/common/include"
+                       INCLUDE_DIRS "ui/main/include"
+                       INCLUDE_DIRS "ui/music/include"
+                       INCLUDE_DIRS "ui/play/include"
+                       INCLUDE_DIRS "ui/record/include"
+                       INCLUDE_DIRS "ui/setting/include"
+                       INCLUDE_DIRS "ui/study/include"
+                       INCLUDE_DIRS "ui/weather/include"
+                       )
 
 spiffs_create_partition_image(storage ../spiffs FLASH_IN_PROJECT)
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wno-unused-const-variable)

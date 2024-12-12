@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include "ui_main.h"
+#include "page_manager.h"
 #include "esp32_s3_szp.h"
-#include "ui/ui_main.h"
 #include "nvs_flash.h"
 #include <esp_system.h>
 
@@ -21,9 +22,9 @@ void app_main(void)
     bsp_lvgl_start(); // 初始化液晶屏lvgl接口
     bsp_spiffs_mount(); // SPIFFS文件系统初始化
     bsp_codec_init(); // 音频初始化
-
+    page_manager_init(); // 页面管理器初始化
+    init_pages(); // 主页面初始化
     // lv_gui_start(); // 显示开机界面
-    lv_main_page();
     // xTaskCreatePinnedToCore(main_page_task, "main_page_task", 4*1024, NULL, 5, NULL, 0); // 主界面任务
 
     // while (true) {
