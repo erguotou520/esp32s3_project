@@ -1,18 +1,15 @@
-#include "app_ui.h"
-#include "audio_player.h"
+#include "ui_main.h"
+#include "ui_common.h"
+#include "ui_study.h"
+#include "ui_play.h"
+#include "ui_weather.h"
+#include "ui_camera.h"
+#include "ui_album.h"
+#include "ui_music.h"
+#include "ui_record.h"
+#include "ui_setting.h"
 #include "esp32_s3_szp.h"
-#include "file_iterator.h"
-#include "string.h"
-#include <dirent.h>
-#include "bt/ble_hidd_demo.h"
-#include "esp_wifi.h"
-#include "freertos/event_groups.h"
-#include "esp_event.h"
-#include <sys/stat.h>
-#include <time.h>
-#include <sys/time.h>
-#include "esp_netif_sntp.h"
-#include "esp_sntp.h"
+
 
 // 创建应用图标函数
 static lv_obj_t* create_app_icon(lv_obj_t *parent, lv_style_t *style,
@@ -36,14 +33,60 @@ static lv_obj_t* create_app_icon(lv_obj_t *parent, lv_style_t *style,
     return icon;
 }
 
+// 页面跳转函数
+void navigate_to_page1(lv_event_t * e)
+{
+    page_flag = 1;
+    lv_study_page();
+}
 
-/******************************** 主界面  ******************************/
+void navigate_to_page2(lv_event_t * e)
+{
+    page_flag = 2;
+    lv_play_page();
+}
 
+void navigate_to_page3(lv_event_t * e)
+{
+    page_flag = 3;
+    lv_weather_page();
+}
+
+void navigate_to_page4(lv_event_t * e)
+{
+    page_flag = 4;
+    lv_camera_page();
+}
+
+void navigate_to_page5(lv_event_t * e)
+{
+    page_flag = 5;
+    lv_album_page();
+}
+
+void navigate_to_page6(lv_event_t * e)
+{
+    page_flag = 6;
+    lv_record_page();
+}
+
+void navigate_to_page7(lv_event_t * e)
+{
+    page_flag = 7;
+    lv_music_page();
+}
+
+void navigate_to_page8(lv_event_t * e)
+{
+    page_flag = 8;
+    lv_setting_page();
+}
+
+// 主界面
 void lv_main_page(void)
 {
     lvgl_port_lock(0);
 
-    lv_obj_del(lckfb_logo); // 删除开机logo
     // 创建主界面基本对象
     lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x000000), 0); // 修改背景为黑色
 
@@ -59,11 +102,11 @@ void lv_main_page(void)
     lv_style_set_width(&bg_style, 320);  
     lv_style_set_height(&bg_style, 240); 
 
-    main_obj = lv_obj_create(lv_scr_act());
+    lv_obj_t *main_obj = lv_obj_create(lv_scr_act());
     lv_obj_add_style(main_obj, &bg_style, 0);
 
     // 显示左上角欢迎语
-    main_text_label = lv_label_create(main_obj);
+    lv_obj_t *main_text_label = lv_label_create(main_obj);
     lv_obj_set_style_text_font(main_text_label, &font_alipuhui20, 0);
     lv_label_set_long_mode(main_text_label, LV_LABEL_LONG_SCROLL_CIRCULAR);     /*Circular scroll*/
     lv_obj_set_width(main_text_label, 280);
@@ -100,22 +143,21 @@ void lv_main_page(void)
     lv_style_set_height(&btn_style, 80); 
 
     // 学习
-    create_app_icon(scroll_view, &btn_style, 0, 0, lv_color_hex(0x30a830), att_event_handler, "\xee\xa1\x92");
+    create_app_icon(scroll_view, &btn_style, 0, 0, lv_color_hex(0x30a830), navigate_to_page1, "\xee\xa1\x92");
     // 娱乐
-    create_app_icon(scroll_view, &btn_style, 105, 0, lv_color_hex(0xf87c30), btset_event_handler, "\xee\x99\x80");
+    create_app_icon(scroll_view, &btn_style, 105, 0, lv_color_hex(0xf87c30), navigate_to_page2, "\xee\x99\x80");
     // 天气
-    create_app_icon(scroll_view, &btn_style, 210, 0, lv_color_hex(0x008b8b), wifiset_event_handler, "\xee\xa3\x88");
+    create_app_icon(scroll_view, &btn_style, 210, 0, lv_color_hex(0x008b8b), navigate_to_page3, "\xee\xa3\x88");
     // 拍照
-    create_app_icon(scroll_view, &btn_style, 0, 97, lv_color_hex(0xd8b010), camera_event_handler, "\xee\x99\xad");
+    create_app_icon(scroll_view, &btn_style, 0, 97, lv_color_hex(0xd8b010), navigate_to_page4, "\xee\x99\xad");
     // 相册
-    create_app_icon(scroll_view, &btn_style, 105, 97, lv_color_hex(0xcd5c5c), sdcard_event_handler, "\xee\x9b\xb8");
+    create_app_icon(scroll_view, &btn_style, 105, 97, lv_color_hex(0xcd5c5c), navigate_to_page5, "\xee\x9b\xb8");
     // 录音
-    create_app_icon(scroll_view, &btn_style, 210, 97, lv_color_hex(0xb87fa8), music_event_handler, "\xee\x9b\x83");
+    create_app_icon(scroll_view, &btn_style, 210, 97, lv_color_hex(0xb87fa8), navigate_to_page6, "\xee\x9b\x83");
     // 音乐
-    create_app_icon(scroll_view, &btn_style, 0, 192, lv_color_hex(0xEB8258), music_event_handler, "\xee\x9e\x95");
+    create_app_icon(scroll_view, &btn_style, 0, 192, lv_color_hex(0xEB8258), navigate_to_page7, "\xee\x9e\x95");
     // 设置
-    create_app_icon(scroll_view, &btn_style, 105, 192, lv_color_hex(0x81BFDA), music_event_handler, "\xee\xa5\xa6");
+    create_app_icon(scroll_view, &btn_style, 105, 192, lv_color_hex(0x81BFDA), navigate_to_page8, "\xee\xa5\xa6");
     
     lvgl_port_unlock();
 }
-

@@ -1,19 +1,9 @@
 #include <stdio.h>
 #include "esp32_s3_szp.h"
-#include "app_ui.h"
+#include "ui/ui_main.h"
 #include "nvs_flash.h"
 #include <esp_system.h>
 
-
-
-// 主界面 任务函数
-static void main_page_task()
-{
-    // 进入主界面
-    lv_main_page();
-
-    vTaskDelete(NULL);
-}
 
 // 主函数
 void app_main(void)
@@ -32,8 +22,8 @@ void app_main(void)
     bsp_spiffs_mount(); // SPIFFS文件系统初始化
     bsp_codec_init(); // 音频初始化
 
-    lv_gui_start(); // 显示开机界面
-    main_page_task();
+    // lv_gui_start(); // 显示开机界面
+    lv_main_page();
     // xTaskCreatePinnedToCore(main_page_task, "main_page_task", 4*1024, NULL, 5, NULL, 0); // 主界面任务
 
     // while (true) {
