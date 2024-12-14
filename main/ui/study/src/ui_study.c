@@ -122,7 +122,6 @@ static void ok_btn_event_handler(lv_event_t * e) {
 }
 
 void lv_study_page(void) {
-    srand(time(NULL));
     page = ui_create_common_page(NULL);
     generate_random_expression(&current_expression);
 
@@ -229,6 +228,12 @@ void lv_study_page_destroy(void) {
         free(current_expression.expression);
         current_expression.expression = NULL;
     }
+
+    if (page) {
+        lv_obj_del(page);
+        page = NULL;
+    }
+
     // 重置所有静态变量
     correct_count = 0;
     total_count = 0;
@@ -246,5 +251,6 @@ page_register_params_t study_page_register_params = {
 };
 
 void init_study_page(void) {
+    srand(time(NULL));
     page_register(study_page_register_params);
 }
