@@ -896,6 +896,20 @@ esp_err_t bsp_get_feed_data(bool is_get_raw_channel, int16_t *buffer, int buffer
     return ret;
 }
 
+esp_err_t play_audio(const uint8_t *start, const uint8_t *end)
+{
+    size_t bytes_write = 0;
+    esp_err_t ret;
+    
+    pa_en(1);  // 打开功放
+    
+    // 播放音频
+    ret = i2s_channel_write(i2s_tx_chan, start, end - start, &bytes_write, portMAX_DELAY);
+    
+    pa_en(0);  // 关闭功放
+    
+    return ret;
+}
 
 extern const uint8_t music_pcm_start[] asm("_binary_sword_pcm_start");
 extern const uint8_t music_pcm_end[]   asm("_binary_sword_pcm_end");

@@ -22,6 +22,7 @@ void ui_create_status_bar(lv_obj_t *parent, const char *title, lv_color_t *bg_co
         lv_obj_t *label = lv_label_create(status_bar);
         lv_label_set_text(label, title);
         lv_obj_set_style_text_color(label, lv_color_hex(0xffffff), 0); 
+        // lv_obj_set_style_text_font(label, &lv_font_montserrat_20, 0);
         lv_obj_set_style_text_font(label, &font_alipuhui20, 0);
         lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
     }
