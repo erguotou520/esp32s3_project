@@ -57,7 +57,7 @@ bool navigate_to(page_id_t page_id) {
         return false;
     }
     
-    page_id_t old_page_id = get_current_page();
+    // page_id_t old_page_id = get_current_page();
     
     if (!push_page(page_id)) {
         return false;

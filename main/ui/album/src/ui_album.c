@@ -8,7 +8,7 @@ static lv_obj_t * label;
 void lv_album_page(void) {
     page = ui_create_common_page(NULL);
 
-    ui_create_status_bar(page, "相册", &common_header_bg_color);
+    ui_create_status_bar(page, "相册", common_header_bg_color);
 
     label = lv_label_create(page);
     lv_obj_set_style_text_font(label, &font_alipuhui20, 0);

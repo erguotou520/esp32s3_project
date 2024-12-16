@@ -125,7 +125,7 @@ void lv_study_page(void) {
     page = ui_create_common_page(NULL);
     generate_random_expression(&current_expression);
 
-    ui_create_status_bar(page, "计算", &common_header_bg_color);
+    ui_create_status_bar(page, "计算", common_header_bg_color);
 
     // 创建上方的flex容器
     lv_obj_t *flex = lv_obj_create(page);

@@ -9,7 +9,7 @@ void lv_camera_page(void) {
     lv_color_t bg_color = lv_color_hex(0x000000);
     page = ui_create_common_page(&bg_color);
 
-    ui_create_status_bar(page, NULL, NULL);
+    ui_create_back_btn(page);
 
     label = lv_label_create(page);
     lv_obj_set_style_text_font(label, &font_alipuhui20, 0);
