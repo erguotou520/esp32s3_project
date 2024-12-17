@@ -32,3 +32,4 @@ idf_component_register(SRCS "esp32_s3_szp.c" "main.c"
 
 spiffs_create_partition_image(storage ../spiffs FLASH_IN_PROJECT)
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wno-unused-const-variable)
+set(PROJECT_VER "1.0.0")

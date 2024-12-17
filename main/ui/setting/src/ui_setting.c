@@ -1,6 +1,7 @@
 #include "ui_setting.h"
 #include "ui_common.h"
 #include "page_manager.h"
+#include "esp_app_desc.h"
 
 enum {
     LV_MENU_ITEM_BUILDER_VARIANT_1,
@@ -77,7 +78,8 @@ void lv_setting_page(void)
     lv_obj_t * sub_about_page = lv_menu_page_create(menu, NULL);
     lv_obj_set_style_pad_hor(sub_about_page, 0, 0);
     section = lv_menu_section_create(sub_about_page);
-    create_text(section, NULL, "Version 1.0", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    const esp_app_desc_t * app_desc = esp_app_get_description();
+    create_text(section, NULL, app_desc->version, LV_MENU_ITEM_BUILDER_VARIANT_1);
 
     // 创建主页面
     root_page = lv_menu_page_create(menu, "设置");
